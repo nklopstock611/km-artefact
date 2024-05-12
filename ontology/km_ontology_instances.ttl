@@ -1,0 +1,81 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix ex: <http://example.org/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+# Instancias de Usuario con propiedades adicionales
+ex:Usuario1 rdf:type ex:Usuario;
+    ex:tieneIdentificacion "ID001";
+    ex:tieneCargo "Analista";
+    ex:tieneCargo "Jefe";
+    ex:tieneProgreso 70 .
+
+ex:Usuario2 rdf:type ex:Usuario;
+    ex:tieneIdentificacion "ID002";
+    ex:tieneCargo "Gerente";
+    ex:tieneProgreso 50 .
+
+ex:Usuario3 rdf:type ex:Usuario;
+    ex:tieneIdentificacion "ID003";
+    ex:tieneCargo "Desarrollador";
+    ex:tieneProgreso 90 .
+
+# Instancias de Modelo con propiedades adicionales
+ex:Modelo1 rdf:type ex:Modelo;
+    ex:Identificacion "MOD001";
+    ex:FechaEjecucion "2024-01-01"^^xsd:date;
+    ex:Parametros "Param1, Param2";
+    ex:Resultados "Resultado1" .
+
+ex:Modelo2 rdf:type ex:Modelo;
+    ex:Identificacion "MOD002";
+    ex:FechaEjecucion "2024-02-01"^^xsd:date;
+    ex:Parametros "Param3, Param4";
+    ex:Resultados "Resultado2" .
+
+ex:Modelo3 rdf:type ex:Modelo;
+    ex:Identificacion "MOD003";
+    ex:FechaEjecucion "2024-03-01"^^xsd:date;
+    ex:Parametros "Param5, Param6";
+    ex:Resultados "Resultado3" .
+
+# Instancias de Producto con propiedades adicionales
+ex:Producto1 rdf:type ex:Producto;
+    ex:SKU "SKU001";
+    ex:NombreProducto "Producto A";
+    ex:DescripcionProducto "Descripción A";
+    ex:tienePrecio 100.0;
+    ex:Cantidad 150 .
+
+ex:Producto2 rdf:type ex:Producto;
+    ex:SKU "SKU002";
+    ex:NombreProducto "Producto B";
+    ex:DescripcionProducto "Descripción B";
+    ex:tienePrecio 200.0;
+    ex:Cantidad 250 .
+
+ex:Producto3 rdf:type ex:Producto;
+    ex:SKU "SKU003";
+    ex:NombreProducto "Producto C";
+    ex:DescripcionProducto "Descripción C";
+    ex:tienePrecio 300.0;
+    ex:Cantidad 350 .
+
+# Instancias de Punto de Venta con propiedades adicionales
+ex:PuntoDeVenta1 rdf:type ex:PuntoDeVenta;
+    ex:IDdeSucursal "SUC001";
+    ex:Ubicacion "Ciudad A";
+    ex:Etiqueta "Etiqueta A";
+    ex:Canal "Online" .
+
+ex:PuntoDeVenta2 rdf:type ex:PuntoDeVenta;
+    ex:IDdeSucursal "SUC002";
+    ex:Ubicacion "Ciudad B";
+    ex:Etiqueta "Etiqueta B";
+    ex:Canal "Físico" .
+
+ex:PuntoDeVenta3 rdf:type ex:PuntoDeVenta;
+    ex:IDdeSucursal "SUC003";
+    ex:Ubicacion "Ciudad C";
+    ex:Etiqueta "Etiqueta C";
+    ex:Canal "Mixto" .

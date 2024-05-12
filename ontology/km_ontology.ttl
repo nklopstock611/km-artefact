@@ -1,0 +1,177 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix ex: <http://example.org/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+# Clases
+ex:Usuario rdf:type rdfs:Class .
+ex:Modelo rdf:type rdfs:Class .
+ex:Producto rdf:type rdfs:Class .
+ex:PuntoDeVenta rdf:type rdfs:Class .
+ex:Evaluacion rdf:type rdfs:Class .
+ex:Recomendacion rdf:type rdfs:Class .
+ex:Cliente rdf:type rdfs:Class .
+
+# Propiedades de Usuario
+ex:tieneIdentificacion rdf:type rdf:Property;
+    rdfs:domain ex:Usuario;
+    rdfs:range xsd:string .
+
+ex:tieneCargo rdf:type rdf:Property;
+    rdfs:domain ex:Usuario;
+    rdfs:range xsd:string .
+
+ex:tieneProgreso rdf:type rdf:Property;
+    rdfs:domain ex:Usuario;
+    rdfs:range xsd:integer .
+
+ex:amigoDe rdf:type rdf:Property;
+    rdfs:domain ex:Usuario;
+    rdfs:range ex:Usuario .
+
+# Propiedades de Modelo
+ex:Identificacion rdf:type rdf:Property;
+    rdfs:domain ex:Modelo;
+    rdfs:range xsd:string .
+
+ex:FechaEjecucion rdf:type rdf:Property;
+    rdfs:domain ex:Modelo;
+    rdfs:range xsd:date .
+
+ex:Parametros rdf:type rdf:Property;
+    rdfs:domain ex:Modelo;
+    rdfs:range xsd:string .
+
+ex:Resultados rdf:type rdf:Property;
+    rdfs:domain ex:Modelo;
+    rdfs:range xsd:string .
+
+# Propiedades de Producto
+ex:SKU rdf:type rdf:Property;
+    rdfs:domain ex:Producto;
+    rdfs:range xsd:string .
+
+ex:NombreProducto rdf:type rdf:Property;
+    rdfs:domain ex:Producto;
+    rdfs:range xsd:string .
+
+ex:DescripcionProducto rdf:type rdf:Property;
+    rdfs:domain ex:Producto;
+    rdfs:range xsd:string .
+
+ex:tienePrecio rdf:type rdf:Property;
+    rdfs:domain ex:Producto;
+    rdfs:range xsd:float .
+
+ex:Cantidad rdf:type rdf:Property;
+    rdfs:domain ex:Producto;
+    rdfs:range xsd:integer .
+
+# Propiedades de Punto de Venta
+ex:IDdeSucursal rdf:type rdf:Property;
+    rdfs:label "ID de Sucursal";
+    rdfs:comment "Identificador único para cada sucursal o punto de venta";
+    rdfs:domain ex:PuntoDeVenta;
+    rdfs:range xsd:string .
+
+ex:Ubicacion rdf:type rdf:Property;
+    rdfs:label "Ubicación";
+    rdfs:comment "Ubicación física de la sucursal";
+    rdfs:domain ex:PuntoDeVenta;
+    rdfs:range xsd:string .
+
+ex:Etiqueta rdf:type rdf:Property;
+    rdfs:label "Etiqueta";
+    rdfs:domain ex:PuntoDeVenta;
+    rdfs:range xsd:string .
+
+ex:Canal rdf:type rdf:Property;
+    rdfs:label "Canal";
+    rdfs:domain ex:PuntoDeVenta;
+    rdfs:range xsd:string .
+
+# Relaciones entre instancias
+ex:Evaluacion ex:estaEvaluandoa ex:Usuario .
+ex:Evaluacion ex:utilizaModelo ex:Modelo .
+ex:Modelo ex:tieneImplementacion ex:Implementacion .
+ex:Implementacion ex:seEjecutaParaPuntoDeVenta ex:PuntoDeVenta .
+ex:PuntoDeVenta ex:TieneProducto ex:Producto .
+
+# Instancias de Usuario con propiedades adicionales
+ex:Usuario1 rdf:type ex:Usuario;
+    ex:tieneIdentificacion "ID001";
+    ex:tieneCargo "Analista";
+    ex:tieneCargo "Jefe";
+    ex:tieneProgreso 70 .
+
+ex:Usuario2 rdf:type ex:Usuario;
+    ex:tieneIdentificacion "ID002";
+    ex:tieneCargo "Gerente";
+    ex:tieneProgreso 50;
+    ex:amigoDe ex:Usuario1 .
+
+ex:Usuario3 rdf:type ex:Usuario;
+    ex:tieneIdentificacion "ID003";
+    ex:tieneCargo "Desarrollador";
+    ex:tieneProgreso 90 .
+
+# Instancias de Modelo con propiedades adicionales
+ex:Modelo1 rdf:type ex:Modelo;
+    ex:Identificacion "MOD001";
+    ex:FechaEjecucion "2024-01-01"^^xsd:date;
+    ex:Parametros "Param1, Param2";
+    ex:Resultados "Resultado1" .
+
+ex:Modelo2 rdf:type ex:Modelo;
+    ex:Identificacion "MOD002";
+    ex:FechaEjecucion "2024-02-01"^^xsd:date;
+    ex:Parametros "Param3, Param4";
+    ex:Resultados "Resultado2" .
+
+ex:Modelo3 rdf:type ex:Modelo;
+    ex:Identificacion "MOD003";
+    ex:FechaEjecucion "2024-03-01"^^xsd:date;
+    ex:Parametros "Param5, Param6";
+    ex:Resultados "Resultado3" .
+
+# Instancias de Producto con propiedades adicionales
+ex:Producto1 rdf:type ex:Producto;
+    ex:SKU "SKU001";
+    ex:NombreProducto "Producto A";
+    ex:DescripcionProducto "Descripción A";
+    ex:tienePrecio 100.0;
+    ex:Cantidad 150 .
+
+ex:Producto2 rdf:type ex:Producto;
+    ex:SKU "SKU002";
+    ex:NombreProducto "Producto B";
+    ex:DescripcionProducto "Descripción B";
+    ex:tienePrecio 200.0;
+    ex:Cantidad 250 .
+
+ex:Producto3 rdf:type ex:Producto;
+    ex:SKU "SKU003";
+    ex:NombreProducto "Producto C";
+    ex:DescripcionProducto "Descripción C";
+    ex:tienePrecio 300.0;
+    ex:Cantidad 350 .
+
+# Instancias de Punto de Venta con propiedades adicionales
+ex:PuntoDeVenta1 rdf:type ex:PuntoDeVenta;
+    ex:IDdeSucursal "SUC001";
+    ex:Ubicacion "Ciudad A";
+    ex:Etiqueta "Etiqueta A";
+    ex:Canal "Online" .
+
+ex:PuntoDeVenta2 rdf:type ex:PuntoDeVenta;
+    ex:IDdeSucursal "SUC002";
+    ex:Ubicacion "Ciudad B";
+    ex:Etiqueta "Etiqueta B";
+    ex:Canal "Físico" .
+
+ex:PuntoDeVenta3 rdf:type ex:PuntoDeVenta;
+    ex:IDdeSucursal "SUC003";
+    ex:Ubicacion "Ciudad C";
+    ex:Etiqueta "Etiqueta C";
+    ex:Canal "Mixto" .
+
