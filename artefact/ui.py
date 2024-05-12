@@ -35,7 +35,6 @@ def load_data(instance_uri):
     results = qs.get_properties_and_values_of_instance(f"http://example.org/{instance_uri}")
     if results:
         prop_dict = consolidate_properties(results)
-        print(prop_dict)
         data = [{"Property": prop.replace('http://example.org/', ''), "Value": values.replace('http://example.org/', '')} for prop, values in prop_dict.items()]
         df = pd.DataFrame(data)
 
@@ -78,4 +77,4 @@ if instance_uri:
                     instance = value.split('/')[-1]
                     col2.button(instance, on_click=handle_click, args=(instance,))  
 else:
-    st.write("Please enter a valid URI.")
+    st.write("Please enter a URI.")
