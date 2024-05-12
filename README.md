@@ -1,4 +1,4 @@
-# Artefact - Knowledge Management Project
+# Artifact - Knowledge Management Project
 
 ## How to run
 First, load the ontology file with the instances. It has to be inside the `ontology` directory and in turtle format.
