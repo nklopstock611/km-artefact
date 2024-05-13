@@ -3,6 +3,9 @@ import pandas as pd
 import rdflib
 import queries as qs
 
+prop_dict = {}
+results = []
+
 def consolidate_properties(results):
     prop_dict = {}
     for prop, val in results:
@@ -24,7 +27,7 @@ def consolidate_properties(results):
 def get_class_name(results):
     for prop, value in results:
         if str(prop) == 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type':
-            return str(value).split('/')[-1]
+            return str(value).split('/')[-1].replace('voca#', '')
 
     return None
 
@@ -32,14 +35,15 @@ def handle_click(instance_name):
     st.session_state.instance_uri = instance_name
 
 def load_data(instance_uri):
-    results = qs.get_properties_and_values_of_instance(f"http://example.org/{instance_uri}")
+    prop_dict = {}
+    results = qs.get_properties_and_values_of_instance(f"http://www.apex.com/{instance_uri}")
     if results:
         prop_dict = consolidate_properties(results)
-        data = [{"Property": prop.replace('http://example.org/', ''), "Value": values.replace('http://example.org/', '')} for prop, values in prop_dict.items()]
+        data = [{"Property": prop.replace('http://www.apex.com/voca#', ''), "Value": values.replace('http://www.apex.com/voca#', '')} for prop, values in prop_dict.items()]
         df = pd.DataFrame(data)
 
         # Render HTML in dataframe cells without index
-        class_of_instance = qs.get_class_of_instance(f"http://example.org/{instance_uri}")
+        class_of_instance = qs.get_class_of_instance(f"http://www.apex.com/{instance_uri}")
         class_of_instance = get_class_name(class_of_instance)
         st.subheader(f"Type: {class_of_instance}")
 
@@ -72,9 +76,16 @@ if instance_uri:
         for prop, value in prop_dict.items():
             if qs.is_instance_uri(value):
                 with st.container():
-                    col1, col2 = st.columns([3, 1])
-                    col1.text(f"{prop}: ")
-                    instance = value.split('/')[-1]
-                    col2.button(instance, on_click=handle_click, args=(instance,))  
+                    col1, col2 = st.columns([2, 1])
+                    if '<ul><li>' in value:
+                        instances = value.replace('<ul><li>', '').replace('</ul>', '').replace('<li>', '').split('</li>')[:-1]
+                        for instance in instances:
+                            instance_name = instance.split('/')[-1]
+                            col1.text(f"{prop}: ")
+                            col2.button(instance_name, on_click=handle_click, args=(instance_name,))
+                    else:
+                        col1.text(f"{prop}: ")
+                        instance = value.split('/')[-1]
+                        col2.button(instance, on_click=handle_click, args=(instance,))  
 else:
     st.write("Please enter a URI.")

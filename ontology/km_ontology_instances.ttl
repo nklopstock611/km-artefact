@@ -1,81 +1,92 @@
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix ex: <http://example.org/> .
+@prefix apex: <http://www.apex.com/> .
+@prefix : <http://www.apex.com/voca#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-# Instancias de Usuario con propiedades adicionales
-ex:Usuario1 rdf:type ex:Usuario;
-    ex:tieneIdentificacion "ID001";
-    ex:tieneCargo "Analista";
-    ex:tieneCargo "Jefe";
-    ex:tieneProgreso 70 .
+# Clases
+:Caso_de_Uso rdf:type rdfs:Class .
+:Modelo rdf:type rdfs:Class .
+:Abordaje_Analitico rdf:type rdfs:Class .
+:Hipotesis_de_Modelado rdf:type rdfs:Class .
+:Concepto_Fundamental rdf:type rdfs:Class .
 
-ex:Usuario2 rdf:type ex:Usuario;
-    ex:tieneIdentificacion "ID002";
-    ex:tieneCargo "Gerente";
-    ex:tieneProgreso 50 .
+# Propiedades
+:descripcion rdf:type rdfs:Property ;
+    rdfs:domain :Caso_de_Uso, :Abordaje_Analitico, :Hipotesis_de_Modelado, :Concepto_Fundamental ;
+    rdfs:range xsd:string .
 
-ex:Usuario3 rdf:type ex:Usuario;
-    ex:tieneIdentificacion "ID003";
-    ex:tieneCargo "Desarrollador";
-    ex:tieneProgreso 90 .
+:parametros rdf:type rdfs:Property ;
+    rdfs:domain :Abordaje_Analitico ;
+    rdfs:range xsd:string .
 
-# Instancias de Modelo con propiedades adicionales
-ex:Modelo1 rdf:type ex:Modelo;
-    ex:Identificacion "MOD001";
-    ex:FechaEjecucion "2024-01-01"^^xsd:date;
-    ex:Parametros "Param1, Param2";
-    ex:Resultados "Resultado1" .
+:tieneHipotesisDeModelado rdf:type rdfs:Property ;
+    rdfs:domain :Modelo ;
+    rdfs:range :Hipotesis_de_Modelado .
 
-ex:Modelo2 rdf:type ex:Modelo;
-    ex:Identificacion "MOD002";
-    ex:FechaEjecucion "2024-02-01"^^xsd:date;
-    ex:Parametros "Param3, Param4";
-    ex:Resultados "Resultado2" .
+:tieneConceptoFundamental rdf:type rdfs:Property ;
+    rdfs:domain :Modelo, :Caso_de_Uso ;
+    rdfs:range :Concepto_Fundamental .
 
-ex:Modelo3 rdf:type ex:Modelo;
-    ex:Identificacion "MOD003";
-    ex:FechaEjecucion "2024-03-01"^^xsd:date;
-    ex:Parametros "Param5, Param6";
-    ex:Resultados "Resultado3" .
+:tieneAbordajeAnalitico rdf:type rdfs:Property ;
+    rdfs:domain :Modelo ;
+    rdfs:range :Abordaje_Analitico .
 
-# Instancias de Producto con propiedades adicionales
-ex:Producto1 rdf:type ex:Producto;
-    ex:SKU "SKU001";
-    ex:NombreProducto "Producto A";
-    ex:DescripcionProducto "Descripción A";
-    ex:tienePrecio 100.0;
-    ex:Cantidad 150 .
+:tieneModelo rdf:type rdfs:Property ;
+    rdfs:domain :Caso_de_Uso ;
+    rdfs:range :Modelo .
 
-ex:Producto2 rdf:type ex:Producto;
-    ex:SKU "SKU002";
-    ex:NombreProducto "Producto B";
-    ex:DescripcionProducto "Descripción B";
-    ex:tienePrecio 200.0;
-    ex:Cantidad 250 .
+:glosario rdf:type rdfs:Property ;
+    rdfs:domain :Caso_de_Uso, :Modelo ;
+    rdfs:range xsd:string .
 
-ex:Producto3 rdf:type ex:Producto;
-    ex:SKU "SKU003";
-    ex:NombreProducto "Producto C";
-    ex:DescripcionProducto "Descripción C";
-    ex:tienePrecio 300.0;
-    ex:Cantidad 350 .
+# Instancias de Modelo
+apex:Pull rdf:type :Modelo .
+apex:Push rdf:type :Modelo .
+apex:Strategic rdf:type :Modelo .
 
-# Instancias de Punto de Venta con propiedades adicionales
-ex:PuntoDeVenta1 rdf:type ex:PuntoDeVenta;
-    ex:IDdeSucursal "SUC001";
-    ex:Ubicacion "Ciudad A";
-    ex:Etiqueta "Etiqueta A";
-    ex:Canal "Online" .
+# Instancia de Caso de Uso
+apex:Pedido_sugerido rdf:type :Caso_de_Uso ;
+    :tieneModelo apex:Pull, apex:Push, apex:Strategic ;
+    :glosario "- SKU: Código de identificación alfanumérico único que se asigna a todo producto vendido por la compañía.\n- Ruta: Conjunto de clientes agrupados mediante un código numérico.\n- Canal: Código que indica la ocasión de consumo en el punto de venta, ej: canal ON representan una ocasión de consumo inmediata en el punto de venta.\n- Categoría: indica un tipo de clasificación de productos de acuerdo a sus características de mercado, ej: bebidas carbonatadas.\n- Segmento: Segmento al que pertenece un SKU de acuerdo a la cantidad de producto en el que viene esa presentación, ej: Multi Serve (contenido para compartir).\n- Giro de negocio: Indica si un SKU contiene alcohol.\n- Envase: Tipo de empaque en el que se envasa el producto ej: Bag in Box (concentrado vendido en bolsa).\n- Material gerencial: String concatenado de categoría, segmento y envase." ;
+    :descripcion "Pedido sugerido es un sistema de recomendación orientado por ciertas reglas de negocio con la intención de desarrollar el máximo potencial de los puntos de venta abastecidos por la compañía CBC. Sus tres modelos principales son: Pull, cuyo objetivo es impedir que los productos en el punto de venta lleguen al momento de rotura, Push, cuyo objetivo es enriquecer el portafolio y Strategic que tiene como finalidad desarrollar la Cobertura Perfecta." .
 
-ex:PuntoDeVenta2 rdf:type ex:PuntoDeVenta;
-    ex:IDdeSucursal "SUC002";
-    ex:Ubicacion "Ciudad B";
-    ex:Etiqueta "Etiqueta B";
-    ex:Canal "Físico" .
+# Instancias de Hipotesis de Modelado
+apex:Hipotesis_de_modelado_pull rdf:type :Hipotesis_de_Modelado ;
+    :descripcion "Es posible evitar los quiebres de stock en el punto de venta mediante el análisis del comportamiento de facturación del cliente, la estacionalidad de los productos y diferentes métricas y features de modelado que se calculan a partir de los datos de caracterización del cliente." .
 
-ex:PuntoDeVenta3 rdf:type ex:PuntoDeVenta;
-    ex:IDdeSucursal "SUC003";
-    ex:Ubicacion "Ciudad C";
-    ex:Etiqueta "Etiqueta C";
-    ex:Canal "Mixto" .
+apex:Hipotesis_de_modelado_push rdf:type :Hipotesis_de_Modelado ;
+    :descripcion "Las innovaciones o productos con alto potencial para un PDV particular que actualmente no consume, pueden ser recomendadas con base en la importancia de sus características para el cliente, es decir: 'como ha comprado x productos, yo le sugiero este', así como, “Otros PDV parecidos a usted, compran estos productos que usted no está comprando y son exitosos”. Para lograrlo, se hace necesario la creación de perfiles de cliente." .
+
+apex:Hipotesis_de_modelado_strategic rdf:type :Hipotesis_de_Modelado ;
+    :descripcion "Es posible recomendar ciertos SKUs que la operación de cada país considera fundamentales en todos los puntos de ventas de acuerdo con las características de estos. Las recomendaciones realizadas por este modelo deben garantizar entonces que se maximice cada una de las batallas deﬁnidas en la Coberuta Perfecta para el punto de venta." .
+
+# Instancias de Concepto Fundamental
+apex:Indice_de_rotura rdf:type :Concepto_Fundamental ;
+    :descripcion "Índice que determina el momento en el que debería abastacerse el punto de venta con un SKU dado." .
+
+apex:Perfil_de_cliente rdf:type :Concepto_Fundamental ;
+    :descripcion "Cuantificación del posible grado de afinidad que tendría un cliente con cada una de las características de los SKU." .
+
+apex:Cobertura_Perfecta rdf:type :Concepto_Fundamental ;
+    :descripcion "Modelo guíado por las reglas de negocio de Cobertura Perfecta y el análisis del perfil del cliente." .
+
+# Instancias de Abordaje Analitico
+apex:Modelo_LigthGBM rdf:type :Abordaje_Analitico ;
+    :descripcion "Modelo LightGBM entrenado con diferentes features generadas a partir del comportamiento de compra del cliente." .
+
+apex:Modelo_Content-based rdf:type :Abordaje_Analitico ;
+    :descripcion "Modelo Content-based desarrollado mediante perfiles de clientes y características de SKUs." .
+
+apex:Modelo_Cobertura_Perfecta_Content-based rdf:type :Abordaje_Analitico ;
+    :descripcion "SKUs que deben estár siempre presentes en todo punto de venta priorizados de acuerdo con el perfil de estos" .
+
+# Relaciones entre instancias
+apex:Pull :tieneHipotesisDeModelado apex:Hipotesis_de_modelado_pull ;
+    :tieneAbordajeAnalitico apex:Modelo_LigthGBM, apex:Modelo_Cobertura_Perfecta_Content-based ;
+    :tieneConceptoFundamental apex:Indice_de_rotura, apex:Perfil_de_cliente, apex:Cobertura_Perfecta .
+
+apex:Push :tieneHipotesisDeModelado apex:Hipotesis_de_modelado_push ;
+    :tieneAbordajeAnalitico apex:Modelo_Content-based .
+
+apex:Strategic :tieneHipotesisDeModelado apex:Hipotesis_de_modelado_strategic .

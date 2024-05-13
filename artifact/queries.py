@@ -2,7 +2,7 @@ from rdflib import Graph, URIRef
 
 g = Graph()
 
-g.parse("./ontology/km_ontology.ttl", format="ttl")
+g.parse("./ontology/km_ontology_instances.ttl", format="ttl")
 
 def get_properties_and_values_of_instance(instance_uri):
     """
@@ -43,7 +43,11 @@ def get_class_of_instance(instance_uri):
     return results
 
 def is_instance_uri(value):
-    return str(value).startswith("http://example.org")
+    if '<ul><li>' in value: # If it is a list of URIs
+        preprocessed_value = value.replace('<ul><li>', '').replace('</ul>', '').replace('<li>', '').split('</li>')
+        return all(item.startswith('http://www.apex.com') for item in preprocessed_value[:-1])
+    else:
+        return str(value).startswith('http://www.apex.com')
 
 def has_instances(properties):
     for prop, value in properties:

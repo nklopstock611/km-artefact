@@ -1,0 +1,21 @@
+descripcion_ps: “Pedido sugerido es un sistema de recomendación orientado por ciertas reglas de negocio con la intención es desarrollar el máximo potencial de los puntos de venta abastecidos por la compañía CBC. Sus tres modelos principales son: Pull, cuyo objetivo es impedir que los productos en el punto de venta lleguen al momento de rotura, Push, cuyo objetivo es enriquecer el portafolio y Strategic que tiene como finalidad desarrollar la Cobertura Perfecta.” 
+
+descripcion_hipotesis_de_modelado_pull: “Es posible evitar los quiebres de stock en el punto de venta mediante el análisis del comportamiento de facturación del cliente, la estacionalidad de los productos y diferentes métricas y features de modelado que se calculan a partir de los datos de caracterización del cliente.” 
+
+descripcion_hipotesis_de_modelado_push: “Las innovaciones o productos con alto potencial para un PDV particular que actualmente no consume, pueden ser recomendadas con base en la importancia de sus características para el cliente, es decir: “como ha comprado x productos, yo le sugiero este”, así como, “Otros PDV parecidos a usted, compran estos productos que usted no está comprando y son exitosos”. Para lograrlo, se hace necesario la creación de perfiles de cliente.” 
+
+descripcion_hipotesis_de_modelado_strategic: “Es posible recomendar ciertos SKUs que la operación de cada país considera fundamentales en todos los puntos de ventas de acuerdo con las características de estos. Las recomendaciones realizadas por este modelo deben garantizar entonces que se maximice cada una de las batallas deﬁnidas en la Coberuta Perfecta para el punto de venta.” 
+
+descripcion_lightgbm: “Modelo LightGBM entrenado con diferentes features generadas a partir del comportamiento de compra del cliente.” 
+
+descripcion_content-based: “Modelo Content-based desarrollado mediante perfiles de clientes y características de SKUs.” 
+
+descripcion_cobertura_perfecta: “Modelo guíado por las reglas de negocio de Cobertura Perfecta y el análisis del perfil del cliente.” 
+
+descripcion_indice_de_rotura: “Índice que determina el momento en el que debería abastacerse el punto de venta con un SKU dado.” 
+
+descripcion_perfil_de_cliente: “Cuantificación del posible grado de afinidad que tendría un cliente con cada una de las características de los SKU.” 
+
+descripcion_cobertura_perfecta_content-based: “SKUs que deben estár siempre presentes en todo punto de venta priorizados de acuerdo con el perfil de estos” 
+
+glosario_ps: “- SKU: Código de identificación alfanúmerico único que se asigna a todo producto vendido por la compañía.\n- Ruta: Conjunto de clientes agrupados mediante un código numérico.\- Canal: Código que indica la ocasión de consumo en el punto de venta, ej: canal ON representan una ocasión de consumo inmediata en el punto de venta.\n- Categoría: indica un tipo de clasificación de productos de acuerdo a sus características de mercado, ej: bebidas carbonatadas.\n- Segmento: Segmento al que pertenece un SKU de acuerdo a la cantidad de producto en el que viene esa presentación, ej: Multi Serve (contenido para comartir).\n- Giro de negocio: Indica si un SKU contiene alcohol.\n- Envase: Tipo de empaque en el que se envasa el producto ej: Bag in Box (concentrado vendido en bolsa).\n- Material gerencial: String concatenado de categoría, segmento y envase.“

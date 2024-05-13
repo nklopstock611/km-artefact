@@ -7,7 +7,7 @@ Next, install the dependencies (if needed).
 
 Finally, run the commands:
 ```
-cd artefact
+cd artifact
 streamlit run ui.py
 ```
 
