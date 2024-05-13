@@ -30,10 +30,10 @@ def get_class_name(results):
 def handle_click(instance_name, prev_instance_name):
     st.session_state.prev_instance_uri.append(prev_instance_name)
     st.session_state.instance_uri = instance_name
-    print(st.session_state.prev_instance_uri)
 
 def go_back():
-    st.session_state.instance_uri = st.session_state.prev_instance_uri.pop()
+    if st.session_state.prev_instance_uri != []:
+        st.session_state.instance_uri = st.session_state.prev_instance_uri.pop()
 
 def load_data(instance_uri):
     prop_dict = {}
@@ -62,11 +62,13 @@ def load_data(instance_uri):
 # Streamlit UI #
 # ============ #
 
-prev_instance_uri = []
+if 'prev_instance_uri' not in st.session_state:
+    st.session_state.prev_instance_uri = ['']
 
 st.title('RDF Instance Property Viewer')
 
 instance_uri = st.text_input('Enter the name of the RDF instance:', key='instance_uri')
+st.markdown("---")
 
 if instance_uri:
     st.session_state['current_uri'] = instance_uri
@@ -77,20 +79,20 @@ if instance_uri:
         st.subheader("Instances of classes in properties")
         for prop, value in prop_dict.items():
             if qs.is_instance_uri(value):
-                with st.container():
-                    col1, col2 = st.columns([2, 1])
-                    if '<ul><li>' in value:
-                        instances = value.replace('<ul><li>', '').replace('</ul>', '').replace('<li>', '').split('</li>')[:-1]
-                        for instance in instances:
-                            instance_name = instance.split('/')[-1]
-                            col1.text(f"{prop}: ")
-                            col2.button(instance_name, on_click=handle_click, args=(instance_name, instance_uri))
-                    else:
-                        col1.text(f"{prop}: ")
-                        instance = value.split('/')[-1]
-                        col2.button(instance, on_click=handle_click, args=(instance, instance_uri))  
+                if '<ul><li>' in value:
+                    instances = value.replace('<ul><li>', '').replace('</ul>', '').replace('<li>', '').split('</li>')[:-1]
+                    for instance in instances:
+                        instance_name = instance.split('/')[-1]
+                        st.text(f"{prop}: ")
+                        col1, col2, col3 = st.columns([4, 1, 1])
+                        col1.button(instance_name, on_click=handle_click, args=(instance_name, instance_uri))
+                else:
+                    st.text(f"{prop}: ")
+                    instance = value.split('/')[-1]
+                    col1, col2, col3 = st.columns([4, 1, 1])
+                    col1.button(instance, on_click=handle_click, args=(instance, instance_uri)) 
 else:
     st.write("Please enter a URI.")
 
-st.write("")
+st.markdown("---")
 st.button("Back", on_click=go_back)
