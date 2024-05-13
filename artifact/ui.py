@@ -1,10 +1,6 @@
 import streamlit as st
 import pandas as pd
-import rdflib
 import queries as qs
-
-prop_dict = {}
-results = []
 
 def consolidate_properties(results):
     prop_dict = {}
@@ -31,8 +27,13 @@ def get_class_name(results):
 
     return None
 
-def handle_click(instance_name):
+def handle_click(instance_name, prev_instance_name):
+    st.session_state.prev_instance_uri.append(prev_instance_name)
     st.session_state.instance_uri = instance_name
+    print(st.session_state.prev_instance_uri)
+
+def go_back():
+    st.session_state.instance_uri = st.session_state.prev_instance_uri.pop()
 
 def load_data(instance_uri):
     prop_dict = {}
@@ -61,6 +62,8 @@ def load_data(instance_uri):
 # Streamlit UI #
 # ============ #
 
+prev_instance_uri = []
+
 st.title('RDF Instance Property Viewer')
 
 instance_uri = st.text_input('Enter the name of the RDF instance:', key='instance_uri')
@@ -69,7 +72,6 @@ if instance_uri:
     st.session_state['current_uri'] = instance_uri
     prop_dict, results = load_data(instance_uri)
 
-    # Instances of classes in properties section
     if qs.has_instances(results):
         st.write("")
         st.subheader("Instances of classes in properties")
@@ -82,10 +84,13 @@ if instance_uri:
                         for instance in instances:
                             instance_name = instance.split('/')[-1]
                             col1.text(f"{prop}: ")
-                            col2.button(instance_name, on_click=handle_click, args=(instance_name,))
+                            col2.button(instance_name, on_click=handle_click, args=(instance_name, instance_uri))
                     else:
                         col1.text(f"{prop}: ")
                         instance = value.split('/')[-1]
-                        col2.button(instance, on_click=handle_click, args=(instance,))  
+                        col2.button(instance, on_click=handle_click, args=(instance, instance_uri))  
 else:
     st.write("Please enter a URI.")
+
+st.write("")
+st.button("Back", on_click=go_back)
