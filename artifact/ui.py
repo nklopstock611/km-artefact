@@ -65,7 +65,7 @@ def load_data(instance_uri):
 if 'prev_instance_uri' not in st.session_state:
     st.session_state.prev_instance_uri = ['']
 
-st.title('APEX - Documentación')
+st.title('Apex in a Nutshell')
 
 instance_uri = st.text_input('Ingresa el nombre de un concepto:', key='instance_uri')
 st.markdown("---")
