@@ -40,13 +40,13 @@ def load_data(instance_uri):
     results = qs.get_properties_and_values_of_instance(f"http://www.apex.com/{instance_uri}")
     if results:
         prop_dict = consolidate_properties(results)
-        data = [{"Property": prop.replace('http://www.apex.com/voca#', ''), "Value": values.replace('http://www.apex.com/voca#', '')} for prop, values in prop_dict.items()]
+        data = [{"Propiedad": prop.replace('http://www.apex.com/voca#', ''), "Valor": values.replace('http://www.apex.com/voca#', '')} for prop, values in prop_dict.items()]
         df = pd.DataFrame(data)
 
         # Render HTML in dataframe cells without index
         class_of_instance = qs.get_class_of_instance(f"http://www.apex.com/{instance_uri}")
         class_of_instance = get_class_name(class_of_instance)
-        st.subheader(f"Type: {class_of_instance}")
+        st.subheader(f"Tipo: {class_of_instance}")
 
         html = df.to_html(escape=False, index=False)
         html = html.replace('<th>', '<th style="text-align: left;">')
@@ -54,7 +54,7 @@ def load_data(instance_uri):
         st.markdown(html, unsafe_allow_html=True)                      
 
     else:
-        st.write("No results found for the given URI.")
+        st.write("No hay resultados para el concepto ingresado.")
 
     return prop_dict, results
 
@@ -65,9 +65,9 @@ def load_data(instance_uri):
 if 'prev_instance_uri' not in st.session_state:
     st.session_state.prev_instance_uri = ['']
 
-st.title('RDF Instance Property Viewer')
+st.title('APEX - Documentación')
 
-instance_uri = st.text_input('Enter the name of the RDF instance:', key='instance_uri')
+instance_uri = st.text_input('Ingresa el nombre de un concepto:', key='instance_uri')
 st.markdown("---")
 
 if instance_uri:
@@ -75,8 +75,8 @@ if instance_uri:
     prop_dict, results = load_data(instance_uri)
 
     if qs.has_instances(results):
-        st.write("")
-        st.subheader("Instances of classes in properties")
+        st.markdown("---")
+        st.subheader("Instancias en las propiedades:")
         for prop, value in prop_dict.items():
             if qs.is_instance_uri(value):
                 if '<ul><li>' in value:
@@ -87,12 +87,12 @@ if instance_uri:
                         col1, col2, col3 = st.columns([4, 1, 1])
                         col1.button(instance_name, on_click=handle_click, args=(instance_name, instance_uri))
                 else:
-                    st.text(f"{prop}: ")
+                    st.text(f"{prop.replace('http://www.apex.com/voca#', '')}: ")
                     instance = value.split('/')[-1]
                     col1, col2, col3 = st.columns([4, 1, 1])
                     col1.button(instance, on_click=handle_click, args=(instance, instance_uri)) 
 else:
-    st.write("Please enter a URI.")
+    st.write("Por favor, ingrese un concepto.")
 
 st.markdown("---")
-st.button("Back", on_click=go_back)
+st.button("Atrás", on_click=go_back)
