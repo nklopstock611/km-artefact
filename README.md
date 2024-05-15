@@ -8,7 +8,7 @@ Next, install the dependencies (if needed).
 Finally, run the commands:
 ```
 cd artifact
-streamlit run ui.py
+python -m streamlit run ui.py
 ```
 
 And the UI should open in the browser.
