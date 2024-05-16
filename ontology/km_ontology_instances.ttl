@@ -10,10 +10,11 @@
 :Abordaje_Analitico rdf:type rdfs:Class .
 :Hipotesis_de_Modelado rdf:type rdfs:Class .
 :Concepto_Fundamental rdf:type rdfs:Class .
+:Restriccion rdf:type rdfs:Class .
 
 # Propiedades
 :descripcion rdf:type rdfs:Property ;
-    rdfs:domain :Caso_de_Uso, :Abordaje_Analitico, :Hipotesis_de_Modelado, :Concepto_Fundamental ;
+    rdfs:domain :Caso_de_Uso, :Abordaje_Analitico, :Hipotesis_de_Modelado, :Concepto_Fundamental, :Restriccion ;
     rdfs:range xsd:string .
 
 :parametros rdf:type rdfs:Property ;
@@ -40,6 +41,14 @@
     rdfs:domain :Caso_de_Uso, :Modelo ;
     rdfs:range xsd:string .
 
+:valorCritico rdf:type rdfs:Property ;
+    rdfs:domain :Concepto_Fundamental ;
+    rdfs:range xsd:string .
+
+:tieneRestriccion rdf:type rdfs:Property ;
+    rdfs:domain :Modelo;
+    rdfs:range xsd:string .
+
 # Instancias de Modelo
 apex:Pull rdf:type :Modelo .
 apex:Push rdf:type :Modelo .
@@ -63,13 +72,31 @@ apex:Hipotesis_de_modelado_strategic rdf:type :Hipotesis_de_Modelado ;
 
 # Instancias de Concepto Fundamental
 apex:Indice_de_rotura rdf:type :Concepto_Fundamental ;
-    :descripcion "Índice que determina el momento en el que debería abastacerse el punto de venta con un SKU dado." .
+    :descripcion "Índice adimensional que determina el momento en el que debería abastacerse el punto de venta con un SKU dado. Su valor va de cero a 1, donde cero indica que el punto de venta aún tiene stock y 1 idnica que en el día actual no debe tener stock." .
+
+apex:Velocidad_de_desgaste rdf:type :Concepto_Fundamental ;
+    :descripcion "Valor que indica la velocidad en la cual un SKUs es 'consumido' por un punto de venta (unidades/día)." .
+
+apex:Factor_de_ventas rdf:type :Concepto_Fundamental ;
+    :descripcion "Valor adimensional que cuantifica la cantidad de cajas adquiridas por el punto de venta de un SKU dado" .
+
+apex:Tasa_de_repeticion rdf:type :Concepto_Fundamental ;
+    :descripcion "Valor adimensional que cuantifica la frecuencia con la que un punto de venta adquiere un SKU dado" .
 
 apex:Perfil_de_cliente rdf:type :Concepto_Fundamental ;
     :descripcion "Cuantificación del posible grado de afinidad que tendría un cliente con cada una de las características de los SKU." .
 
+apex:Matriz_de_características rdf:type :Concepto_Fundamental ;
+    :descripcion "Matriz que permite identificarlas características que poseen todos los SKUs de la operación de cada país." .
+
+apex:Matriz_de_peso_portafolio rdf:type :Concepto_Fundamental ;
+    :descripcion "Matriz que cuantifica el 'peso' de cada SKU en un punto de venta." .
+
 apex:Cobertura_Perfecta rdf:type :Concepto_Fundamental ;
     :descripcion "Modelo guíado por las reglas de negocio de Cobertura Perfecta y el análisis del perfil del cliente." .
+
+apex:POW rdf:type :Concepto_Fundamental ;
+    :descripcion "Directrices del socio aliado PepsiCo de los productos que deben estar presentes en ciertos puntos de venta." .
 
 # Instancias de Abordaje Analitico
 apex:Modelo_LigthGBM rdf:type :Abordaje_Analitico ;
@@ -81,12 +108,34 @@ apex:Modelo_Content-based rdf:type :Abordaje_Analitico ;
 apex:Modelo_Cobertura_Perfecta_Content-based rdf:type :Abordaje_Analitico ;
     :descripcion "SKUs que deben estár siempre presentes en todo punto de venta priorizados de acuerdo con el perfil de estos" .
 
+# Instancias de Restricciones
+apex:Dilution rdf:type :Restriccion ;
+    :descripcion "Ningún SKU que se encuentre en el archivo de dilution de un país puede ser recomendado." .
+
+apex:Realineaciones rdf:type :Restriccion ;
+    :descripcion "Todo SKU que se encuentre en el archivo re realineaciones de un país debe ser realineado antes de ser recomendado." .
+
+apex:Restriccion_por_Rotura rdf:type :Restriccion ;
+    :descripcion "Ningún SKU del modelo Pull puede recomendarse si su índice de rotura no es cercano a 1." .
+
+apex:Restriccion_Bebidas_Alcoholicas rdf:type :Restriccion ;
+    :descripcion "Ningún SKU del modelo Push puede recomendarse si es una bebida alcohólica y el punto de venta nunca ha comprado una bebida alcohólica." .
+
+apex:Restriccion_por_Region rdf:type :Restriccion ;
+    :descripcion "Para la naturaleza del modelo Strategic, los clientes adoptan una región comercial diferente (si así lo decide la operación de cada país) a la que le ha sido asignada en la tabla maestra." .
+
 # Relaciones entre instancias
 apex:Pull :tieneHipotesisDeModelado apex:Hipotesis_de_modelado_pull ;
-    :tieneAbordajeAnalitico apex:Modelo_LigthGBM, apex:Modelo_Cobertura_Perfecta_Content-based ;
-    :tieneConceptoFundamental apex:Indice_de_rotura, apex:Perfil_de_cliente, apex:Cobertura_Perfecta .
+    :tieneAbordajeAnalitico apex:Modelo_LigthGBM ;
+    :tieneConceptoFundamental apex:Indice_de_rotura, apex:Velocidad_de_desgaste, apex:Factor_de_ventas,  apex:Tasa_de_repeticion ;
+    :tieneRestriccion apex:Dilution, apex:Realineaciones, apex:Restriccion_por_Rotura .
 
 apex:Push :tieneHipotesisDeModelado apex:Hipotesis_de_modelado_push ;
-    :tieneAbordajeAnalitico apex:Modelo_Content-based .
+    :tieneAbordajeAnalitico apex:Modelo_Content-based ;
+    :tieneConceptoFundamental apex:Perfil_de_cliente,  apex:Matriz_de_características, apex:Matriz_de_peso_portafolio ;
+    :tieneRestriccion apex:Dilution, apex:Realineaciones, apex:Restriccion_Bebidas_Alcoholicas .
 
-apex:Strategic :tieneHipotesisDeModelado apex:Hipotesis_de_modelado_strategic .
+apex:Strategic :tieneHipotesisDeModelado apex:Hipotesis_de_modelado_strategic ;
+    :tieneAbordajeAnalitico apex:Modelo_Cobertura_Perfecta_Content-based;
+    :tieneConceptoFundamental apex:Cobertura_Perfecta, apex:POW ;
+    :tieneRestriccion apex:Dilution, apex:Realineaciones, apex:Restriccion_por_Region .
