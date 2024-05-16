@@ -1,8 +1,10 @@
 from rdflib import Graph, URIRef
 
+
 g = Graph()
 
 g.parse("./ontology/km_ontology_instances.ttl", format="ttl")
+
 
 def get_properties_and_values_of_instance(instance_uri: str):
     """
@@ -23,6 +25,7 @@ def get_properties_and_values_of_instance(instance_uri: str):
 
     return results
 
+
 def get_class_of_instance(instance_uri: str):
     """
     Returns the class of a given instance.
@@ -41,6 +44,7 @@ def get_class_of_instance(instance_uri: str):
     results = g.query(query, initBindings={'instance_uri': instance_uri_ref})
 
     return results
+
 
 def get_models_fundamental_concept_and_description(model_uri: str):
     """
@@ -63,6 +67,7 @@ def get_models_fundamental_concept_and_description(model_uri: str):
 
     return results
 
+
 def get_models_modeling_hypothesis_and_description(model_uri: str):
     """
     Returns the modeling hypothesis and description of
@@ -72,17 +77,39 @@ def get_models_modeling_hypothesis_and_description(model_uri: str):
 
     query = """
     SELECT ?hipotesisModelado ?descripcionHipotesis 
-    WHERE { 
+    WHERE {
         ?model_uri rdf:type :Modelo . 
         ?hipotesisModelado rdf:type :Hipotesis_de_Modelado . 
-        ?model_uri :tieneHipotesisDeModelado ?hipotesisModelado . 
-        ?hipotesisModelado :descripcion ?descripcionHipotesis .  
-    } 
+        ?model_uri :tieneHipotesisDeModelado ?hipotesisModelado .
+        ?hipotesisModelado :descripcion ?descripcionHipotesis .
+    }
     """
 
     results = g.query(query, initBindings={'model_uri': model_uri_ref})
 
     return results
+
+
+def get_restrictions_by_model(model_uri: str):
+    """
+    Returns the restrictions asociated to the given model.
+    """
+    model_uri_ref = URIRef(model_uri)
+
+    query = """
+    SELECT DISTINCT ?restriccion ?descripcionRestriccion
+    WHERE {
+        ?model_uri rdf:type :Modelo .
+        ?model_uri :tieneRestriccion ?restriccion .
+        ?restriccion rdf:type :Restriccion .
+        ?restriccion :descripcion ?descripcionRestriccion .
+    }
+    """
+
+    results = g.query(query, initBindings={'model_uri': model_uri_ref})
+
+    return results
+
 
 def get_use_cases_models_fundamental_concept_and_descriptions(use_case_uri: str):
     """
@@ -92,21 +119,22 @@ def get_use_cases_models_fundamental_concept_and_descriptions(use_case_uri: str)
     use_case_uri_ref = URIRef(use_case_uri)
 
     query = """
-    SELECT ?modelo ?descripcionModelo ?conceptoFundamental ?descripcionConcepto 
-    WHERE { 
-        ?use_case_uri rdf:type :Caso_de_Uso . 
-        ?modelo rdf:type :Modelo . 
-        ?use_case_uri :tieneModelo ?modelo . 
-        ?conceptoFundamental rdf:type :Concepto_Fundamental . 
-        ?modelo :tieneConceptoFundamental ?conceptoFundamental . 
-        ?modelo :descripcion ?descripcionModelo . 
+    SELECT ?modelo ?descripcionModelo ?conceptoFundamental ?descripcionConcepto
+    WHERE {
+        ?use_case_uri rdf:type :Caso_de_Uso .
+        ?modelo rdf:type :Modelo .
+        ?use_case_uri :tieneModelo ?modelo .
+        ?conceptoFundamental rdf:type :Concepto_Fundamental .
+        ?modelo :tieneConceptoFundamental ?conceptoFundamental .
+        ?modelo :descripcion ?descripcionModelo .
         ?conceptoFundamental :descripcion ?descripcionConcepto .
-    } 
+    }
     """
 
     results = g.query(query, initBindings={'use_case_uri': use_case_uri_ref})
 
     return results
+
 
 def is_instance_uri(value):
     if '<ul><li>' in value: # If it is a list of URIs
@@ -119,5 +147,5 @@ def has_instances(properties):
     for prop, value in properties:
         if is_instance_uri(value):
             return True
-            
+
     return False

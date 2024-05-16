@@ -102,7 +102,7 @@ def load_queries_view():
     st.subheader('Consultas comunes')
     query_param = st.text_input('Ingresa el nombre de un parámetro:')
     st.markdown("---")
-    col1, col2, col3 = st.columns([1, 1, 1])
+    col1, col2, col3, col4 = st.columns([1, 1, 1, 1])
     query = None
     with col1:
         if st.button("Conceptos Fundamentales de un Modelo"):
@@ -113,6 +113,9 @@ def load_queries_view():
     with col3:
         if st.button("Modelos y Conceptos Fundamentales asociados a un Caso de Uso"):
             query = "Q3"
+    with col4:
+        if st.button("Restricciones por Modelo"):
+            query = "Q4"
 
     if query_param:
         if query:
@@ -124,6 +127,8 @@ def load_queries_view():
                 results = qs.get_models_modeling_hypothesis_and_description(query_param_uri)
             elif query == "Q3":
                 results = qs.get_use_cases_models_fundamental_concept_and_descriptions(query_param_uri)
+            elif query == "Q4":
+                results = qs.get_restrictions_by_model(query_param_uri)
             else:
                 st.write('Botón no encontrado.')
 
