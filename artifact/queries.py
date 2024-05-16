@@ -119,15 +119,14 @@ def get_use_cases_models_fundamental_concept_and_descriptions(use_case_uri: str)
     use_case_uri_ref = URIRef(use_case_uri)
 
     query = """
-    SELECT ?modelo ?descripcionModelo ?conceptoFundamental ?descripcionConcepto
+    SELECT ?modelo ?conceptoFundamental ?descripcionConcepto
     WHERE {
         ?use_case_uri rdf:type :Caso_de_Uso .
         ?modelo rdf:type :Modelo .
-        ?use_case_uri :tieneModelo ?modelo .
         ?conceptoFundamental rdf:type :Concepto_Fundamental .
-        ?modelo :tieneConceptoFundamental ?conceptoFundamental .
-        ?modelo :descripcion ?descripcionModelo .
+        ?use_case_uri :tieneModelo ?modelo .
         ?conceptoFundamental :descripcion ?descripcionConcepto .
+        ?modelo :tieneConceptoFundamental ?conceptoFundamental .
     }
     """
 

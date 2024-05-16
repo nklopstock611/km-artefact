@@ -133,15 +133,28 @@ def load_queries_view():
                 st.write('Botón no encontrado.')
 
             if len(results) > 0:
-                for concept, desc in results:
-                    st.subheader(concept.replace('http://www.apex.com/', '').replace('_', ' '))
-                    st.write(desc)
+                for result in results:
+                    if len(result) == 1:
+                        st.write()
+                        st.write(result[0].replace('http://www.apex.com/', '').replace('_', ' '))
+                    elif len(result) == 2:
+                        concept, desc = result
+                        st.subheader(concept.replace('http://www.apex.com/', '').replace('_', ' '))
+                        st.write(desc)
+                    elif len(result) == 3:
+                        model, conc, conc_desc = result
+                        st.subheader(f"Modelo: {model.replace('http://www.apex.com/', '').replace('_', ' ')} - Concepto Fundamental: {conc.replace('http://www.apex.com/', '').replace('_', ' ')}")
+                        # st.write(f"Descripción del Concepto Fundamental: {conc_desc}")
+                        st.markdown(f"**Descripción del Concepto Fundamental:** {conc_desc}")
             else:
+                st.write('')
                 st.write('No se retornó información con el parámetro dado.')
         else:
+            st.write('')
             st.write('Selecciona una consulta.')
     else:
-        st.write('Ingresa un parámetro de consulta.')
+        st.write('')
+        st.write('Ingresa un parámetro de consulta y presiona la tecla Enter.')
 
 # ============ #
 # Streamlit UI #
